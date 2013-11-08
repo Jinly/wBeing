@@ -2,7 +2,8 @@ cmake_minimum_required (VERSION 2.6)
 
 project (wBeing)
 
-set (SOURCE_EXE source/main.cpp)		# Установка переменной со списком исходников для исполняемого файла
+set (SOURCE_EXE source/main.cpp source/gui.cpp source/world.cpp
+				source/animal.cpp)
 include_directories (source)
 
 # GTK2
