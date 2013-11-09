@@ -11,7 +11,6 @@ enum cellType {
 	EMPTY = 0,
 	GRASS,
 	STONE,
-	MEAT,
 	ANIMAL,
 	EGG
 };

@@ -17,10 +17,22 @@ extern GtkWidget *draw_spin, *eat_spin;
 
 extern long long generation;
 
+struct Color {
+	Color(guchar _red, guchar _green, guchar _blue, guchar _alpha) :
+		red(_red), green(_green), blue(_blue), alpha(_alpha) {};
+	guchar red;
+	guchar green;
+	guchar blue;
+	guchar alpha;
+};
+
 void put_pixel (GdkPixbuf *pixbuf, 
 				int x, int y, guchar red,
 				guchar green, guchar blue, 
 				guchar alpha);
+
+void put_4pixel (GdkPixbuf *pixbuf, 
+				int x, int y, Color);
 
 static unsigned n = 0;
 

@@ -6,40 +6,19 @@
 void World::DrawCell(int x, int y, GdkPixbuf *pixbuf) {
 	switch (sells[x][y].type) {
 		case EMPTY:
-			put_pixel(pixbuf, x*2, y*2, 0, 0, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2, 0, 0, 0, 255);
-			put_pixel(pixbuf, x*2, y*2+1, 0, 0, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2+1, 0, 0, 0, 255);
+			put_4pixel(pixbuf, x*2, y*2, Color(0,0,0,255));
 			break;
 		case GRASS:
-			put_pixel(pixbuf, x*2, y*2, 0, 255, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2, 0, 255, 0, 255);
-			put_pixel(pixbuf, x*2, y*2+1, 0, 255, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2+1, 0, 255, 0, 255);
+			put_4pixel(pixbuf, x*2, y*2, Color(0,255,0,255));
 			break;
 		case STONE:
-			put_pixel(pixbuf, x*2, y*2, 255, 0, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2, 255, 0, 0, 255);
-			put_pixel(pixbuf, x*2, y*2+1, 255, 0, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2+1, 255, 0, 0, 255);
-			break;
-		case MEAT:
-			put_pixel(pixbuf, x*2, y*2, 255, 128, 128, 255);
-			put_pixel(pixbuf, x*2+1, y*2, 255, 128, 128, 255);
-			put_pixel(pixbuf, x*2, y*2+1, 255, 128, 128, 255);
-			put_pixel(pixbuf, x*2+1, y*2+1, 255, 128, 128, 255);
+			put_4pixel(pixbuf, x*2, y*2, Color(255,0,0,255));
 			break;
 		case ANIMAL:
-			put_pixel(pixbuf, x*2, y*2, 0, 0, 255, 255);
-			put_pixel(pixbuf, x*2+1, y*2, 0, 0, 255, 255);
-			put_pixel(pixbuf, x*2, y*2+1, 0, 0, 255, 255);
-			put_pixel(pixbuf, x*2+1, y*2+1, 0, 0, 255, 255);
+			put_4pixel(pixbuf, x*2, y*2, Color(0,0,255,255));
 			break;
 		case EGG:
-			put_pixel(pixbuf, x*2, y*2, 255, 255, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2, 255, 255, 0, 255);
-			put_pixel(pixbuf, x*2, y*2+1, 255, 255, 0, 255);
-			put_pixel(pixbuf, x*2+1, y*2+1, 255, 255, 0, 255);
+			put_4pixel(pixbuf, x*2, y*2, Color(255,255,0,255));
 			break;
 	}
 }

@@ -59,7 +59,6 @@ void Animal::Eat(World &world, direction direct) {
 	if ((world.sells[x+rx][y+ry].type == STONE) || (world.sells[x+rx][y+ry].type == ANIMAL) || (fill <= 0.5))
 		return;
 	if ((world.sells[x+rx][y+ry].type == GRASS) ||
-		(world.sells[x+rx][y+ry].type == MEAT) ||
 		(world.sells[x+rx][y+ry].type == EGG))
 		fill += 20.0;
 	world.sells[x+rx][y+ry].type = ANIMAL;
