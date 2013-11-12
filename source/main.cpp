@@ -70,7 +70,7 @@ void start_callback(GtkWidget *widget, gpointer data) {
 //==================== МАИН ============================================
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);// инициализация gtk
-	srand(time(NULL)); // инициализация rand
+	rand_init(); // инициализация rand
 	
 	World myWorld; // наш мирок
 	

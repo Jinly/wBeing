@@ -4,14 +4,14 @@
 #include <vector>
 
 #include <world.hpp>
+#include <gui.hpp>
 #include <main.hpp>
 
 enum direction {
 	UP = 0,
 	DOWN,
 	LEFT,
-	RIGHT, 
-	NONE
+	RIGHT
 };
 
 class Animal {
@@ -24,9 +24,12 @@ class Animal {
 		void Kill(World &world);
 		void Out(World &world);
 		unsigned x, y;
-		double fill;
 		std::vector<Animal> *selfvector;
+		Color &GetColor(void);
+	private:
+		Color color;
 		direction last;
+		double fill;
 };
 
 

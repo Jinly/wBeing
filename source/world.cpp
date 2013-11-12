@@ -15,7 +15,7 @@ void World::DrawCell(int x, int y, GdkPixbuf *pixbuf) {
 			put_4pixel(pixbuf, x*2, y*2, Color(255,0,0,255));
 			break;
 		case ANIMAL:
-			put_4pixel(pixbuf, x*2, y*2, Color(0,0,255,255));
+			put_4pixel(pixbuf, x*2, y*2, sells[x][y].animal->GetColor());
 			break;
 		case EGG:
 			put_4pixel(pixbuf, x*2, y*2, Color(255,255,0,255));
@@ -62,9 +62,6 @@ World::World() {
 			animals.push_back(newAnimal);
 			sells[x][y].type = ANIMAL;
 			sells[x][y].animal = &animals[animals.size()-1];
-		} else {
-			i--;
-			continue;
 		}
 	}
 	// седьмой день -- отдых

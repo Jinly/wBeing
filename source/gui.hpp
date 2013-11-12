@@ -3,8 +3,6 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
-#include <ctime>
-#include <cstdlib>
 
 extern GtkWidget *window;
 extern GtkWidget *image;
@@ -18,6 +16,7 @@ extern GtkWidget *draw_spin, *eat_spin;
 extern long long generation;
 
 struct Color {
+	Color(){};
 	Color(guchar _red, guchar _green, guchar _blue, guchar _alpha) :
 		red(_red), green(_green), blue(_blue), alpha(_alpha) {};
 	guchar red;
@@ -34,9 +33,7 @@ void put_pixel (GdkPixbuf *pixbuf,
 void put_4pixel (GdkPixbuf *pixbuf, 
 				int x, int y, Color);
 
-static unsigned n = 0;
-
-int rand_init(int seed);
+int rand_init(void);
 int r_rand(void);
 
 #endif

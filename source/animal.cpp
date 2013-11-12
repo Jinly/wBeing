@@ -8,6 +8,10 @@ Animal::Animal(int _x, int _y, std::vector<Animal> *_selfvector) {
 	fill = 100.0;
 	selfvector = _selfvector;
 	last = UP;
+	color.alpha = 255;
+	color.blue = r_rand() % 128 + 128;
+	color.red = r_rand() % 128;
+	color.green = r_rand() % 128;
 }
 
 Animal::~Animal() {
@@ -84,7 +88,7 @@ void Animal::Kill(World &world) {
 void Animal::Out(World &world) {
 	if (fill <= 100)
 		return;
-	direction direct = NONE;
+	direction direct;
 	int ox, oy;
 	if (world.sells[x][y+1].type == EMPTY)
 		direct = UP, ox = x, oy = y+1;
@@ -94,7 +98,7 @@ void Animal::Out(World &world) {
 		direct = RIGHT, ox = x+1, oy = y;
 	if (world.sells[x-1][y].type == EMPTY)
 		direct = LEFT, ox = x-1, oy = y;
-	if (direct == NONE)
+	else
 		return;
 	world.sells[ox][oy].type = ANIMAL;
 	animals.push_back(Animal(ox, oy, &animals));
@@ -123,4 +127,8 @@ void Animal::Step(World &world) {
 	Eat(world, direct);
 	if (fill >= 300)
 		Out(world);
+}
+
+Color &Animal::GetColor(void) {
+	return color;
 }

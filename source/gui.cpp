@@ -1,8 +1,11 @@
 #include <gui.hpp>
+#include <ctime>
+#include <cstdlib>
 
-int rand_init(int seed) {
+static unsigned n = 0;
+int rand_init(void) {
 	n = 0;
-	srand(seed);
+	srand(time(NULL));
 }
 
 int r_rand(void) {
