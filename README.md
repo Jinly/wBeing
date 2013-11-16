@@ -1,5 +1,5 @@
 To build this program:
-	mkdir build
-	cd ./build
-	cmake ..
-	make
+mkdir build
+cd ./build
+cmake ..
+make

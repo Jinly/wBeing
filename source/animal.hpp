@@ -5,33 +5,38 @@
 
 #include <world.hpp>
 #include <gui.hpp>
-#include <main.hpp>
+//#include <main.hpp>
 
-enum direction {
-	UP = 0,
-	DOWN,
-	LEFT,
-	RIGHT
-};
+class Animal;
 
-class Animal {
+class AnimalSell {
 	public:
-		Animal(int _x, int _y, std::vector<Animal> *selfvector);
-		~Animal();
+		AnimalSell(int _x, int _y, std::vector<AnimalSell> *selfvector);
+		~AnimalSell();
 		void Step(World &world);
 		void Go(World &world, direction direct);
 		void Eat(World &world, direction direct);
 		void Kill(World &world);
-		void Out(World &world);
+		void Make(World &world, direction direct);
+		void AddEnergy(double _fill);
 		unsigned x, y;
-		std::vector<Animal> *selfvector;
+		std::vector<AnimalSell> *selfvector;
+		Animal *selfanimal;
 		Color &GetColor(void);
 	private:
 		Color color;
 		direction last;
+		double energy;
 		double fill;
 };
 
-
+class Animal {
+	public:
+		Animal(AnimalSell *sell);
+		~Animal();
+		void Step(World *world);
+		//data
+		std::vector<AnimalSell *> sells;
+};
 
 #endif

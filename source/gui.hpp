@@ -25,15 +25,17 @@ struct Color {
 	guchar alpha;
 };
 
-void put_pixel (GdkPixbuf *pixbuf, 
-				int x, int y, guchar red,
-				guchar green, guchar blue, 
-				guchar alpha);
-
-void put_4pixel (GdkPixbuf *pixbuf, 
+void put_4pixel(GdkPixbuf *pixbuf, 
 				int x, int y, Color);
 
 int rand_init(void);
 int r_rand(void);
+
+enum direction {
+	UP = 0,
+	DOWN,
+	LEFT,
+	RIGHT
+};
 
 #endif

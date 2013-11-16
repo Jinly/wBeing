@@ -1,81 +1,56 @@
+#include <animal.hpp>
 #include <gui.hpp>
 #include <world.hpp>
-#include <animal.hpp>
 #include <main.hpp>
 
-Animal::Animal(int _x, int _y, std::vector<Animal> *_selfvector) {
+AnimalSell::AnimalSell(int _x, int _y, std::vector<AnimalSell> *_selfvector) {
 	x = _x; y = _y;
-	fill = 100.0;
+	fill = 10.0;
+	energy = 50.0;
 	selfvector = _selfvector;
 	last = UP;
 	color.alpha = 255;
 	color.blue = r_rand() % 128 + 128;
-	color.red = r_rand() % 128;
-	color.green = r_rand() % 128;
+	color.red = 64 + r_rand() % 128;
+	color.green = 64 + r_rand() % 128;
 }
 
-Animal::~Animal() {
+AnimalSell::~AnimalSell() {
 }
 
-void Animal::Go(World &world, direction direct) {
+void AnimalSell::Go(World &world, direction direct) {
 	int rx, ry;
-	switch (direct) {
-		case UP:
-			rx = 0, ry = 1;
-			break;
-		case DOWN:
-			rx = 0, ry = -1;
-			break;
-		case LEFT:
-			rx = -1; ry = 0;
-			break;
-		case RIGHT:
-			rx = 1; ry = 0;
-			break;
-	} 
-	if ((world.sells[x+rx][y+ry].type == STONE) || (world.sells[x+rx][y+ry].type == ANIMAL) || (fill <= 0.5))
+	world.GetPoint(x, y, direct, rx, ry);
+	if ((world.sells[rx][ry].type == Cell::STONE) || (world.sells[rx][ry].type == Cell::ANIMAL) || (energy <= 0.005*fill))
 		return;
-	world.sells[x+rx][y+ry].type = ANIMAL;
-	world.sells[x+rx][y+ry].animal = world.sells[x][y].animal;
-	world.sells[x][y].type = EMPTY;
+	world.sells[rx][ry].type = Cell::ANIMAL;
+	world.sells[rx][ry].animal = world.sells[x][y].animal;
+	world.sells[x][y].type = Cell::EMPTY;
 	world.sells[x][y].animal = NULL;
-	x += rx;
-	y += ry;
-	fill -= 0.5;
+	x = rx;
+	y = ry;
+	energy -= 0.005 * fill;
 }
 
-void Animal::Eat(World &world, direction direct) {
+void AnimalSell::Eat(World &world, direction direct) {
 	int rx, ry;
-	switch (direct) {
-		case UP:
-			rx = 0, ry = 1;
-			break;
-		case DOWN:
-			rx = 0, ry = -1;
-			break;
-		case LEFT:
-			rx = -1; ry = 0;
-			break;
-		case RIGHT:
-			rx = 1; ry = 0;
-			break;
-	} 
-	if ((world.sells[x+rx][y+ry].type == STONE) || (world.sells[x+rx][y+ry].type == ANIMAL) || (fill <= 0.5))
+	world.GetPoint(x, y, direct, rx, ry);
+	if ((world.sells[rx][ry].type == Cell::STONE) || (world.sells[rx][ry].type == Cell::ANIMAL) || (energy <= 0.01*fill))
 		return;
-	if ((world.sells[x+rx][y+ry].type == GRASS) ||
-		(world.sells[x+rx][y+ry].type == EGG))
+	if ((world.sells[rx][ry].type == Cell::GRASS) ||
+		(world.sells[rx][ry].type == Cell::EGG))
 		fill += 20.0;
-	world.sells[x+rx][y+ry].type = ANIMAL;
-	world.sells[x+rx][y+ry].animal = world.sells[x][y].animal;
-	world.sells[x][y].type = EMPTY;
+	world.sells[rx][ry].type = Cell::ANIMAL;
+	world.sells[rx][ry].animal = world.sells[x][y].animal;
+	world.sells[x][y].type = Cell::EMPTY;
 	world.sells[x][y].animal = NULL;
-	x += rx;
-	y += ry;
-	fill -= 0.5;
+	x = rx;
+	y = ry;
+	energy -= 0.01*fill;
 }
 
-void Animal::Kill(World &world) {
-	world.sells[x][y].type = EMPTY;
+void AnimalSell::Kill(World &world) {
+	world.sells[x][y].type = Cell::EMPTY;
 	world.sells[x][y].animal = NULL;
 	for (size_t i = 0; i < selfvector->size(); i++)
 		if (&((*selfvector)[i]) == this) {
@@ -84,51 +59,64 @@ void Animal::Kill(World &world) {
 		}
 }
 
-// да родит коровенка теленка
-void Animal::Out(World &world) {
-	if (fill <= 100)
+void AnimalSell::Make(World &world, direction direct) {
+	if (fill <= 150)
 		return;
-	direction direct;
-	int ox, oy;
-	if (world.sells[x][y+1].type == EMPTY)
-		direct = UP, ox = x, oy = y+1;
-	if (world.sells[x][y-1].type == EMPTY)
-		direct = DOWN, ox = x, oy = y-1;
-	if (world.sells[x+1][y].type == EMPTY)
-		direct = RIGHT, ox = x+1, oy = y;
-	if (world.sells[x-1][y].type == EMPTY)
-		direct = LEFT, ox = x-1, oy = y;
-	else
+	int rx, ry;
+	world.GetPoint(x, y, direct, rx, ry);
+	if (world.sells[rx][ry].type != Cell::EMPTY)
 		return;
-	world.sells[ox][oy].type = ANIMAL;
-	animals.push_back(Animal(ox, oy, &animals));
-	world.sells[ox][oy].animal = &animals[animals.size()-1];
+	world.sells[rx][ry].type = Cell::ANIMAL;
+	animals.push_back(AnimalSell(rx, ry, &animals));
+	world.sells[rx][ry].animal = &animals[animals.size() - 1];
+	world.sells[rx][ry].animal -> color = color;
 	fill -= 150.0;
 }
 
-void Animal::Step(World &world) {
-	fill -= 0.1;
-	if (fill <= 0) {
+void AnimalSell::Step(World &world) {
+	energy -= 0.1;
+	if (energy < 5.0)
+		AddEnergy(10.0);
+	if (energy <= 0.0) {
 		Kill(world);
 		return;
 	}
 	direction direct = last;
-	if (r_rand() % 2)
+	if (r_rand() % 3)
 		direct = (direction) (r_rand() % 4);
-	if (world.sells[x][y+1].type == GRASS)
+	if (world.sells[x][y+1].type == Cell::GRASS)
 		direct = UP;
-	if (world.sells[x][y-1].type == GRASS)
+	if (world.sells[x][y-1].type == Cell::GRASS)
 		direct = DOWN;
-	if (world.sells[x+1][y].type == GRASS)
+	if (world.sells[x+1][y].type == Cell::GRASS)
 		direct = RIGHT;
-	if (world.sells[x-1][y].type == GRASS)
+	if (world.sells[x-1][y].type == Cell::GRASS)
 		direct = LEFT;
 	last = direct;
 	Eat(world, direct);
-	if (fill >= 300)
-		Out(world);
+	if (fill >= 200)
+		Make(world, (direction) (r_rand() % 4));
 }
 
-Color &Animal::GetColor(void) {
+void AnimalSell::AddEnergy(double _fill) {
+	if (_fill >= fill)
+		_fill = fill;
+	fill -= _fill;
+	energy += _fill;
+}
+
+Color &AnimalSell::GetColor(void) {
 	return color;
+}
+
+Animal::Animal(AnimalSell *sell) {
+	sells.push_back(sell);
+}
+
+Animal::~Animal() {
+	
+}
+
+void Animal::Step(World *world) {
+	return;
 }

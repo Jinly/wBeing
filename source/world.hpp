@@ -5,20 +5,19 @@
 
 #include <gui.hpp>
 
-class Animal;
-
-enum cellType {
-	EMPTY = 0,
-	GRASS,
-	STONE,
-	ANIMAL,
-	EGG
-};
+class AnimalSell;
 
 class Cell {
 	public:
+		enum cellType {
+			EMPTY = 0,
+			GRASS,
+			STONE,
+			ANIMAL,
+			EGG
+		};
 		cellType type;
-		Animal *animal;
+		AnimalSell *animal;
 };
 
 class World {
@@ -27,7 +26,9 @@ class World {
 		void DrawCell(int x, int y, GdkPixbuf *pixbuf);
 		void Draw(GdkPixbuf *pixbuf);
 		void AddGrass(int n);
-		Cell sells[256][256];		
+		void GrowGrass(void);
+		void GetPoint(int x, int y, direction direct, int &ox, int &oy);
+		Cell sells[256][256];	
 };
 
 #endif

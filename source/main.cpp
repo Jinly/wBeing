@@ -26,10 +26,12 @@ GtkWidget *hbox, *vbox;
 GtkWidget *start_button, *exit_button;
 GtkWidget *save_button;
 GdkPixbuf *pixbuf;
-GtkWidget *head_label, *gen_label, *animal_label, *spin_label, *eat_label;
-GtkWidget *draw_spin, *eat_spin;
+GtkWidget *gen_label, *animal_label, *spin_label, *eat_label;
+GtkWidget *grow_label;
+GtkWidget *draw_spin, *eat_spin, *grow_spin;
 
-std::vector<Animal> animals;
+std::vector<AnimalSell> animals;
+std::vector<Animal> _Animals;
 
 //====================== callbacks =====================================
 void exit_callback(GtkWidget *widget, gpointer data) {
@@ -49,7 +51,8 @@ gboolean step(gpointer data) {
 	gtk_label_set_text(GTK_LABEL(animal_label), str);
 	
 	world->AddGrass(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(eat_spin)));
-	
+	if (generation % gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(grow_spin)) == 0)
+		world->GrowGrass();
 	for (size_t i = 0; i < animals.size(); i++)
 		animals[i].Step(*world);
 	if ((generation % gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(draw_spin))) == 0)
@@ -87,7 +90,6 @@ int main(int argc, char **argv) {
 							512,
 							512); // буфффер
 	image = gtk_image_new_from_pixbuf(pixbuf); // сюда рисуется буфффер
-	head_label = gtk_label_new("Wor v0.1\n (c) OlOlO\n"); // ололо версия
 	gen_label = gtk_label_new("Generation : 0"); // поколение:
 	animal_label = gtk_label_new("Animals : 0"); // жывотных:
 	GtkObject *adj = gtk_adjustment_new(1,
@@ -96,26 +98,34 @@ int main(int argc, char **argv) {
 										0);
 	draw_spin = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0.5, 0);
 	
-	adj = gtk_adjustment_new(	8,
+	adj = gtk_adjustment_new(	4,
 								0, 100000000,
 								1, 1,
 								0);
 	eat_spin = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0.5, 0);
 	
+	adj = gtk_adjustment_new(	16,
+								1, 100000000,
+								1, 1,
+								0);
+	grow_spin = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0.5, 0);
+	
 	spin_label = gtk_label_new("draw every X\ngeneration:");
 	eat_label = gtk_label_new("add X grass\nevery generation:");
+	grow_label = gtk_label_new("grow grass every\nX generation:");
 	
 	// привязываем их
 	gtk_container_add(GTK_CONTAINER(window), hbox);
 	gtk_container_add(GTK_CONTAINER(hbox), image);
 	gtk_container_add(GTK_CONTAINER(hbox), vbox);
-	gtk_container_add(GTK_CONTAINER(vbox), head_label);
 	gtk_container_add(GTK_CONTAINER(vbox), gen_label);
 	gtk_container_add(GTK_CONTAINER(vbox), animal_label);
 	gtk_container_add(GTK_CONTAINER(vbox), spin_label);
 	gtk_container_add(GTK_CONTAINER(vbox), draw_spin);
 	gtk_container_add(GTK_CONTAINER(vbox), eat_label);
 	gtk_container_add(GTK_CONTAINER(vbox), eat_spin);
+	gtk_container_add(GTK_CONTAINER(vbox), grow_label);
+	gtk_container_add(GTK_CONTAINER(vbox), grow_spin);
 	gtk_container_add(GTK_CONTAINER(vbox), start_button);
 	gtk_container_add(GTK_CONTAINER(vbox), save_button);
 	gtk_container_add(GTK_CONTAINER(vbox), exit_button);

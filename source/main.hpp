@@ -3,6 +3,7 @@
 
 #include <animal.hpp>
 
-extern std::vector<Animal> animals;
+extern std::vector<AnimalSell> animals;
+extern std::vector<Animal> _Animals;
 
 #endif
