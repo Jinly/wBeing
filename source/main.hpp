@@ -3,7 +3,4 @@
 
 #include <animal.hpp>
 
-extern std::vector<AnimalSell> animals;
-extern std::vector<Animal> _Animals;
-
 #endif

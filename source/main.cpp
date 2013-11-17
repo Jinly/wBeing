@@ -14,7 +14,6 @@
 // headers
 #include <gui.hpp>
 #include <world.hpp>
-#include <animal.hpp>
 #include <main.hpp>
 
 //======================================================================
@@ -30,9 +29,6 @@ GtkWidget *gen_label, *animal_label, *spin_label, *eat_label;
 GtkWidget *grow_label;
 GtkWidget *draw_spin, *eat_spin, *grow_spin;
 
-std::vector<AnimalSell> animals;
-std::vector<Animal> _Animals;
-
 //====================== callbacks =====================================
 void exit_callback(GtkWidget *widget, gpointer data) {
 	gtk_main_quit();
@@ -41,22 +37,26 @@ void exit_callback(GtkWidget *widget, gpointer data) {
 //======================= stepper ======================================
 // тут основная работа
 gboolean step(gpointer data) {
+	World &world = *(World*)data;
 	char str[32];
-	World *world = (World *) data;
-	
 	sprintf(str, "Generation : %d", ++generation);
 	gtk_label_set_text(GTK_LABEL(gen_label), str);
 	
-	sprintf(str, "Animals : %d", animals.size());
+	sprintf(str, "Animals : %d", world.animals.size());
 	gtk_label_set_text(GTK_LABEL(animal_label), str);
 	
-	world->AddGrass(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(eat_spin)));
+	world.AddGrass(gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(eat_spin)));
+	
 	if (generation % gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(grow_spin)) == 0)
-		world->GrowGrass();
-	for (size_t i = 0; i < animals.size(); i++)
-		animals[i].Step(*world);
-	if ((generation % gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(draw_spin))) == 0)
-		world->Draw(pixbuf);
+		world.GrowGrass();
+	
+	world.Step();
+	
+	if (generation % gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(draw_spin)) == 0) {
+		world.Draw(pixbuf);
+		gtk_widget_queue_draw(image);
+	}
+	
 	return true;
 }
 
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);// инициализация gtk
 	rand_init(); // инициализация rand
 	
-	World myWorld; // наш мирок
+	World myWorld(256, 256);
 	
 	// мутим виджеты
 	window = gtk_window_new(GTK_WINDOW_TOPLEVEL); //окошко
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
 								0);
 	eat_spin = gtk_spin_button_new(GTK_ADJUSTMENT(adj), 0.5, 0);
 	
-	adj = gtk_adjustment_new(	16,
+	adj = gtk_adjustment_new(	32,
 								1, 100000000,
 								1, 1,
 								0);
@@ -135,7 +135,6 @@ int main(int argc, char **argv) {
 	g_signal_connect(G_OBJECT(exit_button), "clicked", G_CALLBACK(exit_callback), NULL);
 	g_signal_connect(G_OBJECT(start_button), "clicked", G_CALLBACK(start_callback), (gpointer) &myWorld);
 	
-	// рисуем мирок
 	myWorld.Draw(pixbuf);
 	
 	//ни шагу назад

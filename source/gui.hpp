@@ -31,11 +31,4 @@ void put_4pixel(GdkPixbuf *pixbuf,
 int rand_init(void);
 int r_rand(void);
 
-enum direction {
-	UP = 0,
-	DOWN,
-	LEFT,
-	RIGHT
-};
-
 #endif
