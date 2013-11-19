@@ -23,7 +23,7 @@ Animal::~Animal() {
 
 void Animal::Step(World &world) {
 	world.AnimalEat(cells[r_rand() % cells.size()], (Direction)(r_rand() % 4));
-	if (cells[r_rand() % cells.size()] -> fill > 150)
+	if (cells[r_rand() % cells.size()] -> fill > 300)
 		world.AnimalMake(cells[r_rand() % cells.size()], (Direction)(r_rand() % 4));
 	
 	for (size_t i = 0; i < cells.size(); i++)
@@ -48,4 +48,16 @@ void Animal::Kill(World &world) {
 			break;
 		}
 	delete this;
+}
+
+bool Animal::CellGo(World &world, AnimalCell *cells) {
+	
+}
+
+bool Animal::CellEat(World &world, AnimalCell *cells) {
+	
+}
+
+bool Animal::CellMake(World &world, AnimalCell *cells) {
+	
 }

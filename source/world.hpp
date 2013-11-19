@@ -67,6 +67,7 @@ class World {
 		void AnimalEat(AnimalCell *cell, Direction direct);
 		void AnimalMake(AnimalCell *cell, Direction direct);
 		void AnimalReproduct(AnimalCell *cell);
+		void AnimalAttack(AnimalCell *cell, Direction direct);
 		void AnimalKill(AnimalCell *cell);
 		void AnimalAddEnergy(AnimalCell *cell, double n);
 	// width and h

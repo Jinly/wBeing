@@ -10,7 +10,10 @@ class Animal {
 		Color GetColor(void) { return color; }
 		void Step(World &world);
 		void Kill(World &world);
-	//	
+	//	operation with cells
+		bool CellGo(World &world, AnimalCell *cells);
+		bool CellEat(World &world, AnimalCell *cells);
+		bool CellMake(World &world, AnimalCell *cells);
 	//	data
 		std::vector<AnimalCell *> cells;
 	private:

@@ -192,3 +192,15 @@ void World::AnimalAddEnergy(AnimalCell *cell, double n) {
 	cell -> fill -= n;
 	cell -> energy += n;
 }
+
+void World::AnimalAttack(AnimalCell *cell, Direction direct) {
+	int rx, ry;
+	GetRCoords(cell->x, cell->y, direct, rx, ry);
+	if (GetCell(rx, ry).GetType() != Being)
+		return;
+	AnimalCell *other = (AnimalCell *) &GetCell(rx, ry);
+	other -> energy -= cell -> energy / 5.0;
+	cell -> energy -= cell -> energy / 5.0;
+	if (other -> energy < 0)
+		AnimalKill(other);
+}
